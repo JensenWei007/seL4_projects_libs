@@ -33,3 +33,4 @@ int sel4rpc_server_recv(sel4rpc_server_env_t *env);
 int sel4rpc_server_reply(sel4rpc_server_env_t *env, int caps, int errorCode, int cookie);
 int sel4rpc_default_handler(sel4rpc_server_env_t *env, UNUSED void *data, RpcMessage *rpcMsg);
 
+int sel4rpc_net_reply(sel4rpc_server_env_t *env, int errorCode, int cookie, int result);

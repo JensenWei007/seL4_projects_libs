@@ -65,6 +65,13 @@ message ReturnMessage {
     uint64 cookie = 2;
 };
 
+message NetMessage {
+    uint32 op = 1;
+    uint32 result = 2;
+    uint32 group = 3;
+    uint32 cookie = 4;
+};
+
 /*
  * this is the only message type that's actually sent,
  * all the other messages are just contained within
@@ -76,5 +83,6 @@ message RpcMessage {
         MemoryAllocMessage memory = 2;
         IrqAllocMessage irq = 3;
         IOPortMessage ioport = 4;
+        NetMessage net = 5;
     };
 };

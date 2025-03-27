@@ -165,6 +165,28 @@ int sel4rpc_default_handler(sel4rpc_server_env_t *env, UNUSED void *data, RpcMes
     return -1;
 }
 
+int sel4rpc_net_reply(sel4rpc_server_env_t *env, int errorCode, int cookie, int result)
+{
+    pb_ostream_t ostream = pb_ostream_from_IPC(0);
+    RpcMessage rpcMsg;
+    rpcMsg.which_msg = RpcMessage_net_tag;
+    rpcMsg.msg.net.result = result;
+    rpcMsg.msg.net.cookie = cookie;
+    bool ret = pb_encode_delimited(&ostream, &RpcMessage_msg, &rpcMsg);
+    if (!ret) {
+        printf("sel4rpc_net_reply encode fail\n");
+    }
+
+    size_t size = ostream.bytes_written / sizeof(seL4_Word);
+    if (ostream.bytes_written % sizeof(seL4_Word)) {
+        size++;
+    }
+
+    api_reply(env->reply->cptr, seL4_MessageInfo_new(0, 0, 0, size));
+
+    return 0;
+}
+
 int sel4rpc_server_init(sel4rpc_server_env_t *env, vka_t *vka,
                         sel4rpc_handler_t handler_func, void *data, vka_object_t *reply, simple_t *simple)
 {
